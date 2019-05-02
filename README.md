@@ -107,13 +107,34 @@ GET /**wdc** - Tableau WDC to connect q-risotto endpoint /v1/doc/{docId}/hypercu
 
 `npm install`
 
-### Qlik Sense Service Dispatcher Integration
+### Qlik Sense Service Dispatcher Integration (server)
 
 * Copy the files manually with admin priviliges into  
 ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\q-risotto\```  
 
 * Then append the following configuration options to  
 ```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
+This will let the Service Dispatcher know how to run the module, this step has to be re-applied in an upgrade of Qlik Sense Server.
+
+```
+[q-risotto]
+Identity=Qlik.q-risotto
+Enabled=true
+DisplayName=q-risotto
+ExecType=nodejs
+ExePath=Node\node.exe
+Script=Node\q-risotto\server.js
+
+[q-risotto.parameters]
+```
+
+### Qlik Sense Service Dispatcher Integration (desktop)
+
+* Copy the files manually with admin priviliges into  
+```C:\Users\[USERNAME]\AppData\Local\Programs\Qlik\Sense\ServiceDispatcher\Node\q-risotto\```  
+
+* Then append the following configuration options to  
+```C:\Users\[USERNAME]\AppData\Local\Programs\Qlik\Sense\ServiceDispatcher\services.conf```  
 This will let the Service Dispatcher know how to run the module, this step has to be re-applied in an upgrade of Qlik Sense Server.
 
 ```
@@ -142,7 +163,26 @@ Adjust ```./src/config/config.json``` to work with a Qlik Sense Server like this
     "certificatesPath": "C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates",
     "port": 3000
 }
+
 ```
+
+### Qlik Sense Desktop Integration
+Adjust ```./src/config/config.json``` to work with a Qlik Sense Desktop like this:
+
+...
+{
+    "enigmaSchema": "enigma.js/schemas/12.170.2.json",
+    "engineHost": "localhost",
+    "enginePort": 4848,
+    "globalAppId": "engineData",
+    "userDirectory": null,
+    "userId": null,
+    "certificatesPath": null,
+    "port": 3000,
+    "unsecure": false
+}
+
+...
 
 ### Qlik Core Integration
 

@@ -1,7 +1,7 @@
 {
     "enigmaSchema": "enigma.js/schemas/12.170.2.json",
     "engineHost": "qix-engine",
-    "enginePort": 9076,
+    "enginePort": 4848,
     "globalAppId": "engineData",
     "userDirectory": null,
     "userId": null,

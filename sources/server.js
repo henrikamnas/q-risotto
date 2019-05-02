@@ -21,7 +21,7 @@ server.register(Inert, (err) => {
 
 if (config.certificatesPath) {
     server.connection({
-        port: process.env.PORT || config.port,
+        port: config.port,
         tls: {
             ca: [config.certificates.ca],
             key: config.certificates.server.key,
@@ -30,10 +30,10 @@ if (config.certificatesPath) {
     });
 } else {
     server.connection({
-        port: process.env.PORT || config.port
+        port: config.port
     });
 }
-console.log('q-risotto is running on port ' + process.env.PORT || config.port);
+console.log('q-risotto is running on port ' + config.port);
 
 server.route(routes.routes);
 
