@@ -2,8 +2,6 @@
 
 const Hapi = require('hapi');
 const Inert = require('inert');
-const path = require('path')
-const fs = require('fs');
 const routes = require('./routes');
 const config = require('./src/config/config')
 const log4js = require('log4js');

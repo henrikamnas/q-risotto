@@ -17,6 +17,7 @@
     "promise": "^8.0.1",
     "require-hapiroutes": "^0.1.9",
     "serializeapp": "^3.0.0",
-    "ws": "^3.3.3"
+    "ws": "^3.3.3",
+    "request": "^2.69.0"
   }
 }

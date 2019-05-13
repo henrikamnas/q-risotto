@@ -6,6 +6,7 @@ const serializeapp = require('serializeapp');
 const createSession = require('../util/session');
 const log4js = require('log4js');
 const logger = log4js.getLogger();
+const request = require('request');
 
 const nxPage = {
     "qTop": 0,
@@ -54,6 +55,41 @@ const hyperCubeDef = {
         qInitialDataFetch: []
     }
 }
+
+/**
+ * Our Qlik Sense Server information
+ * Needs exported certificates from Qlik Sense QMC
+ */
+var r = request.defaults({
+    rejectUnauthorized: false,
+    host: 'localhost',
+    // cert: fs.readFileSync(__dirname + '/client.pem'),
+    // key: fs.readFileSync(__dirname + '/client_key.pem')
+})
+
+/**
+ * Request ticket from QPS.
+ * Adjust uri as needed.
+ */
+function getQlikSenseTicket(directory, user, callback) {    
+    r.post({
+        uri: 'https://localhost:4243/qps/ticket?xrfkey=abcdefghijklmnop',
+        body: JSON.stringify({
+            "UserDirectory": directory,
+            "UserId": user,
+            "Attributes": []
+        }),
+        headers: {
+            'x-qlik-xrfkey': 'abcdefghijklmnop',
+            'content-type': 'application/json'
+        }
+    }, function(err, res, body) {
+        if(err) return callback(err);
+        var ticket = JSON.parse(body)['Ticket'];
+        
+        callback(null, ticket);       
+    });
+};
 
 // generate qHyperCubeDef object out of payload
 function getHyperCubeFromPayload(payload, nxPage) {
@@ -262,6 +298,22 @@ module.exports = {
             });
     },
 
+    //path '/v1/doc/{docId}/object/{objId}/imgExport'
+    imgExport: (request, reply) => {
+        // logger.info("doc", request.params.docId, "object", request.params.objId);
+
+        var config = {
+            host: "localhost",
+            prefix: "/",
+            port: 443,
+            isSecure: true
+        };
+        
+        require(['js/qlik'], function(qlik) {
+            var global = qlik.getGlobal(config);
+            reply('test');
+        });
+    },
     // path: '/v1/doc/{docId}/object/{objId}/layout'
     objectLayout: (request, reply) => {
         logger.info("doc", request.params.docId, "object", request.params.objId, "layout");

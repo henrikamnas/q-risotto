@@ -43,6 +43,11 @@ module.exports.routes = [
     },
     {
         method: 'GET',
+        path: '/v1/imgExport',
+        handler: routeHandler.imgExport
+    },
+    {
+        method: 'GET',
         path: '/v1/doc/{docId}/object/{objId}/layout',
         handler: routeHandler.objectLayout
     },
