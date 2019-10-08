@@ -1,7 +1,7 @@
 'use strict';
 
-const Hapi = require('hapi');
-const Inert = require('inert');
+const Hapi = require('@hapi/hapi');
+// const Bcrypt = require('bcrypt');
 const routes = require('./routes');
 const config = require('./src/config/config')
 const log4js = require('log4js');
@@ -9,35 +9,68 @@ const logger = log4js.getLogger();
 
 logger.info("q-risotto started");
 
-const server = new Hapi.Server();
-
-server.register(Inert, (err) => {
-    if (err) {
-        throw err;
+const users = {
+    'dummyuser': {
+        username: 'dummy',
+        password: 'password',   
+        name: 'Henrik Amnas',
+        id: '2133d32a'
     }
-});
+};
 
-if (config.certificatesPath) {
-    server.connection({
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+        
+const validate = async (request, username, password, h) => {
+ 
+    if (username === 'help') {
+        return { response: h.redirect('https://hapijs.com/help') };     // custom response
+    }
+ 
+    const user = users[username];
+
+    if (!user) {
+        return { credentials: null, isValid: false };
+    }
+
+
+    const isValid = password==user.password;
+    const credentials = { id: user.id, name: user.name };
+ 
+    return { isValid, credentials };
+};  
+
+const main = async () => {
+
+    var options = {
         port: config.port,
         tls: {
             ca: [config.certificates.ca],
             key: config.certificates.server.key,
             cert: config.certificates.server.cert
         }
-    });
-} else {
-    server.connection({
-        port: config.port
-    });
-}
-console.log('q-risotto is running on port ' + config.port);
+      };
 
-server.route(routes.routes);
+    const server = Hapi.server(options);
+ 
+    await server.register(require('@hapi/basic'));
 
-server.start((err) => {
-    if (err) {
-        throw err;
-    }
-    logger.info('Server running at:', server.info.uri);
+    console.log('q-risotto is running on port ' + config.port);
+
+    server.auth.strategy('simple', 'basic', { validate });
+    server.auth.default('simple');
+ 
+    server.route(routes.routes);
+ 
+    await server.start();
+ 
+    return server;
+};
+ 
+main()
+.then((server) => console.log(`Server listening on ${server.info.uri}`))
+.catch((err) => {
+ 
+    console.error(err);
+    process.exit(1);
 });

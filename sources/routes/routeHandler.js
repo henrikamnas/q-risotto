@@ -142,7 +142,8 @@ module.exports = {
         var _qtproduct = '',
             _global = {};
         const session = createSession();
-        session.open()
+        
+       return session.open()
             .then(global => {
                 _global = global;
                 return global.qTProduct();
@@ -153,7 +154,7 @@ module.exports = {
             })
             .then(vers => {
                 session.close();
-                reply({
+                return {
                     name: pjson.name,
                     version: pjson.version,
                     description: pjson.description,
@@ -162,12 +163,14 @@ module.exports = {
                     qtProduct: _qtproduct,
                     qtVersion: vers,
                     state: 'cooking'
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
+
+
     },
 
     // path: '/{param*}' 
@@ -183,20 +186,20 @@ module.exports = {
     docs: (request, reply) => {
         var _global = {};
         const session = createSession();
-        session.open()
+        return session.open()
             .then((global) => {
                 _global = global;
                 return global.getDocList();
             })
             .then(list => {
                 session.close();
-                reply({
+                return {
                     qDocList: list
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -205,7 +208,7 @@ module.exports = {
         var _global = {};
         logger.info("doc", request.params.docId);
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId, "", "", "", true);
@@ -213,13 +216,13 @@ module.exports = {
             .then(doc => doc.getAppLayout())
             .then((layout) => {
                 session.close();
-                reply({
+                return {
                     qLayout: layout
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -228,7 +231,7 @@ module.exports = {
         logger.info("doc objects", request.params.docId);
         var _global = {};
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId, "", "", "", true);
@@ -236,13 +239,13 @@ module.exports = {
             .then(doc => doc.getAllInfos())
             .then(infos => {
                 session.close();
-                reply({
+                return {
                     qInfos: infos.qInfos || infos
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -251,7 +254,7 @@ module.exports = {
         logger.info("doc objects", request.params.docId);
         var _global = {};
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId, "", "", "", true);
@@ -259,11 +262,11 @@ module.exports = {
             .then(doc => serializeapp(doc))
             .then(results => {
                 session.close();
-                reply(results);
+                return results;
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -272,7 +275,7 @@ module.exports = {
         logger.info("doc", request.params.docId, "object", request.params.objId);
         var _global = {};
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId, "", "", "", true);
@@ -283,18 +286,18 @@ module.exports = {
                     return object.getProperties()
                 } else {
                     session.close();
-                    reply({});
+                    return {};
                 }
             })
             .then(props => {
                 session.close();
-                reply({
+                return {
                     qProp: props
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -345,7 +348,7 @@ module.exports = {
         const session = createSession(request.params.docId);
         var nxPageToGet = nxPage;
         var w = 1, h = 10000;
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -373,11 +376,11 @@ module.exports = {
                     }))
             .then(data => {
                 session.close();
-                reply(data);
+                return data;
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -388,7 +391,7 @@ module.exports = {
         const session = createSession(request.params.docId);
         var nxPageToGet = nxPage;
         var w = 1, h = 10000;
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -416,11 +419,11 @@ module.exports = {
                     }))
             .then(data => {
                 session.close();
-                reply(data);
+                return data;
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -429,7 +432,7 @@ module.exports = {
         logger.info("doc", request.params.docId, "object", request.params.objId, "layers");
         var _global = {};
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -446,13 +449,13 @@ module.exports = {
                     }))
             .then(layers => {
                 session.close();
-                reply({
+                return {
                     layers: layers
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -461,7 +464,7 @@ module.exports = {
         logger.info("doc", request.params.docId, "hypercube");
         var _global = {};
         const session = createSession(request.params.docId);
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -482,13 +485,13 @@ module.exports = {
             )
             .then(cube => {
                 session.close();
-                reply({
+                return {
                     qHyperCube: cube
-                });
+                };
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -498,7 +501,7 @@ module.exports = {
         var _global = {};
         const session = createSession(request.params.docId);
         var res = {};
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -524,11 +527,11 @@ module.exports = {
             )
             .then(area => {
                 session.close();
-                reply(area);
+                return area;
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     },
 
@@ -546,7 +549,7 @@ module.exports = {
                 logger.error(error);
             }
         }
-        session.open()
+        return session.open()
             .then(global => {
                 _global = global;
                 return global.openDoc(request.params.docId);
@@ -642,11 +645,11 @@ module.exports = {
                     })
                 )
             .then(res => {
-                reply(res);
+                return res;
             })
             .catch(error => {
                 console.error('Error occured:', error);
-                reply({error: error.message});
+                return {error: error.message};
             });
     }
 

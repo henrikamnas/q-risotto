@@ -6,15 +6,10 @@ module.exports.routes = [
     { // about
         method: 'GET',
         path: '/',
-        handler: routeHandler.about
-    },
-    { // static file content (WDC)
-        method: 'GET',
-        path: '/{param*}',
         config: {
             auth: false
         },
-        handler: routeHandler.public
+        handler: routeHandler.about
     },
     {
         method: 'GET',
@@ -80,4 +75,5 @@ module.exports.routes = [
         method: 'POST',
         path: '/v1/doc/{docId}/hypercube/json/{pageNo*}',
         handler: routeHandler.hyperCubeJson
-    }];
+    }
+];
