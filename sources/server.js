@@ -10,9 +10,9 @@ const logger = log4js.getLogger();
 logger.info("q-risotto started");
 
 const users = {
-    'dummyuser': {
-        username: 'dummy',
-        password: 'password',   
+    'henrik.amnas': {
+        username: 'henrik.amnas',
+        password: '123',   
         name: 'Henrik Amnas',
         id: '2133d32a'
     }
@@ -54,7 +54,8 @@ const main = async () => {
     } else {
         var options = {
             port: config.port
-    }
+        };
+    };
 
     const server = Hapi.server(options);
  

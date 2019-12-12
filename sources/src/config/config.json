@@ -1,11 +1,11 @@
 {
     "enigmaSchema": "enigma.js/schemas/12.170.2.json",
-    "engineHost": "qliksense.companya.com",
-    "enginePort": 4747,
+    "engineHost": "localhost",
+    "enginePort": 4848,
     "globalAppId": "engineData",
-    "userDirectory": "internal",
-    "userId": "sa_repository",
-    "certificatesPath": "",
+    "userDirectory": null,
+    "userId": null,
+    "certificatesPath": null,
     "port": 3000,
     "unsecure": false
 }
