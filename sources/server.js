@@ -42,6 +42,7 @@ const validate = async (request, username, password, h) => {
 
 const main = async () => {
 
+    if (config.certificatesPath) {
     var options = {
         port: config.port,
         tls: {
@@ -50,6 +51,10 @@ const main = async () => {
             cert: config.certificates.server.cert
         }
       };
+    } else {
+        var options = {
+            port: config.port
+    }
 
     const server = Hapi.server(options);
  
